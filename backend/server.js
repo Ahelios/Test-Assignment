@@ -1,51 +1,47 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
-const axios = require('axios');
 const schedule = require('node-schedule');
+const rateRoutes = require('./routes/rateRoutes');
+const { initializeDatabase } = require('./models/exchangeRateModel');
+const { fetchAndUpdateRates } = require('./services/rateService');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'your_username',
-  password: 'your_password',
-  database: 'currency_exchange'
-});
+// Routes
+app.use('/api', rateRoutes);
 
-db.connect(err => {
-  if (err) throw err;
-  console.log('MySQL Connected...');
-});
-
-// Function to fetch and update currency rates
-async function fetchCurrencyRates() {
-  try {
-    const response = await axios.get('https://api.exchangerate-api.com/v4/latest/USD'); // Example API endpoint
-    const rates = response.data.rates;
-
-    // Insert or update rates in the database
-    for (const [currency, rate] of Object.entries(rates)) {
-      db.query('INSERT INTO rates (currency_code, exchange_rate) VALUES (?, ?) ON DUPLICATE KEY UPDATE exchange_rate = ?', [currency, rate, rate]);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Schedule the job to run every 24 hours
-schedule.scheduleJob('0 0 * * *', fetchCurrencyRates); // Runs at midnight every day
-
-// Define API route to get currency rates
-app.get('/api/rates', (req, res) => {
-  db.query('SELECT * FROM rates', (err, results) => {
-    if (err) return res.status(500).send(err);
-    res.json(results);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    error: 'Something broke!',
+    message: err.message 
   });
 });
 
-app.listen(5000, () => {
-  console.log('Server running on port 5000');
+// Initialize database and fetch initial rates
+const initializeApp = async () => {
+  try {
+    await initializeDatabase();
+    await fetchAndUpdateRates();
+    console.log('Application initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize app:', error);
+    process.exit(1);
+  }
+};
+
+// Schedule rate updates - runs at midnight every day
+schedule.scheduleJob('0 0 * * *', fetchAndUpdateRates);
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  initializeApp();
 });

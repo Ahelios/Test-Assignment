@@ -1,53 +1,91 @@
+const axios = require('axios');
+const db = require('../config/database');
 const {
   getAllRates,
-  getRatesByCurrency,
-  getStats,
   updateRates,
+  getStatistics,
+  getRatesForCurrency
 } = require('../models/exchangeRateModel');
-
-const axios = require('axios');
 
 const API_KEY = process.env.ANYAPI_KEY;
 const TARGET_CURRENCIES = ['GBP', 'USD', 'AUD'];
 
+let requestCount = 0;
+const MAX_TEST_REQUESTS = 100;
+const REQUEST_TIMEOUT = 900000; // 15 minutes
+
 const fetchAndUpdateRates = async () => {
   try {
-    console.log('Fetching rates at:', new Date().toISOString());
-    // Make only ONE API call
+    if (requestCount >= MAX_TEST_REQUESTS) {
+      return {
+        success: false,
+        message: `Maximum test requests (${MAX_TEST_REQUESTS}) reached. Please wait for production mode.`
+      };
+    }
+
+    const lastCallTime = global.lastApiCall || 0;
+    const now = Date.now();
+
+    if (now - lastCallTime < REQUEST_TIMEOUT) {
+      return {
+        success: false,
+        message: 'Rate limit in effect',
+        nextAllowedRequest: new Date(lastCallTime + REQUEST_TIMEOUT)
+      };
+    }
+
     const response = await axios.get(
       `https://anyapi.io/api/v1/exchange/rates?base=EUR&apiKey=${API_KEY}`
     );
 
     if (response.data && response.data.rates) {
+      global.lastApiCall = now;
+      requestCount++;
+
       // Update rates for each target currency
       for (const currency of TARGET_CURRENCIES) {
         const rate = response.data.rates[currency];
         await updateRates('EUR', currency, rate);
       }
-    }
 
-    console.log('Rates updated successfully');
-    return true;
+      // Log after insertion
+      const allRates = await getAllRates();
+
+      return {
+        success: true,
+        message: 'Rates updated successfully',
+        requestCount,
+        remainingRequests: MAX_TEST_REQUESTS - requestCount
+      };
+    }
+    return { success: false, message: 'Invalid API response' };
   } catch (error) {
-    console.error('Error fetching rates:', error);
+    if (error.response?.status === 429) {
+      return { success: false, message: 'API rate limit exceeded' };
+    }
+    throw new Error(error.message || 'Failed to fetch rates');
+  }
+};
+
+const getRatesByCurrency = async (currency) => {
+  try {
+    return await getRatesForCurrency(currency);
+  } catch (error) {
     throw error;
   }
 };
 
-const getRates = async () => {
-  return await getAllRates();
-};
-
-const getCurrencyStatistics = async (targetCurrency) => {
-  return await getStats(targetCurrency);
+const getStats = async (currency) => {
+  try {
+    return await getStatistics(currency);
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = {
   fetchAndUpdateRates,
-  getRates,
-  getCurrencyStatistics,
   getAllRates,
   getRatesByCurrency,
-  getStats,
-  updateRates,
+  getStats
 };

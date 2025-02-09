@@ -1,19 +1,21 @@
+const db = require('../config/database');
 const {
-  getAllRates: getAllRatesService,
+  getAllRates: getAllRatesFromService,
   getRatesByCurrency: getRatesByCurrencyService,
   getStats: getStatsService,
   updateRates: updateRatesService,
+  fetchAndUpdateRates
 } = require('../services/rateService');
 
 // Get all rates
 const getAllRates = async (req, res) => {
   try {
-    const rates = await getAllRatesService();
+    const rates = await getAllRatesFromService();
     res.json(rates);
   } catch (error) {
     res.status(500).json({
       error: 'Failed to fetch rates',
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -27,7 +29,7 @@ const getRatesByCurrency = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: 'Failed to fetch rates for currency',
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -41,7 +43,7 @@ const getStats = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: 'Failed to fetch statistics',
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -49,12 +51,13 @@ const getStats = async (req, res) => {
 // Manual trigger to update rates
 const updateRates = async (req, res) => {
   try {
-    await updateRatesService();
-    res.json({ message: 'Rates updated successfully' });
+    const result = await fetchAndUpdateRates();
+    res.json(result);
   } catch (error) {
+    console.error('Error updating rates:', error);
     res.status(500).json({
       error: 'Failed to update rates',
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -63,5 +66,5 @@ module.exports = {
   getAllRates,
   getRatesByCurrency,
   getStats,
-  updateRates,
+  updateRates
 };

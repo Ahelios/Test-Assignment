@@ -3,10 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const schedule = require('node-schedule');
 const rateRoutes = require('./routes/rateRoutes');
-const { initializeDatabase } = require('./models/exchangeRateModel');
+const {
+  initializeDatabase,
+  getAllRates
+} = require('./models/exchangeRateModel');
 const { fetchAndUpdateRates } = require('./services/rateService');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -18,9 +22,9 @@ app.use('/api', rateRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Something broke!',
-    message: err.message 
+    message: err.message
   });
 });
 
@@ -28,11 +32,18 @@ app.use((err, req, res, next) => {
 const initializeApp = async () => {
   try {
     await initializeDatabase();
-    await fetchAndUpdateRates();
+    const existingRates = await getAllRates();
+    if (!existingRates || existingRates.length === 0) {
+      console.log('No existing rates found, fetching initial rates...');
+      await fetchAndUpdateRates();
+    } else {
+      console.log('Using existing rates from database');
+    }
     console.log('Application initialized successfully');
   } catch (error) {
     console.error('Failed to initialize app:', error);
-    process.exit(1);
+    // Don't exit the process, just log the error
+    console.error('Continuing with application startup...');
   }
 };
 
@@ -40,8 +51,11 @@ const initializeApp = async () => {
 schedule.scheduleJob('0 0 * * *', fetchAndUpdateRates);
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
-  initializeApp();
+  try {
+    await initializeApp();
+  } catch (error) {
+    console.error('Application initialization error:', error);
+  }
 });

@@ -4,7 +4,7 @@ const {
   getAllRates,
   getRatesByCurrency,
   getStats,
-  updateRates,
+  updateRates
 } = require('../controllers/rateController');
 
 // Get all rates

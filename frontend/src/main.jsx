@@ -7,7 +7,7 @@ import { RatesProvider } from './context/RatesContext';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RatesProvider>
-      <App />
+      <App/>
     </RatesProvider>
   </StrictMode>
 );

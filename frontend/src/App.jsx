@@ -4,11 +4,11 @@ import Footer from './components/layout/Footer';
 
 function App() {
   return (
-    <>
+    <div className="app">
       <Header />
       <TableSection />
       <Footer />
-    </>
+    </div>
   );
 }
 

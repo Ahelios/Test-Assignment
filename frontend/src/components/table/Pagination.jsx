@@ -1,35 +1,58 @@
 function Pagination({ currentPage, totalPages, onPageChange }) {
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-
   return (
-    <div className="flex justify-center mt-4 gap-2">
+    <div className="pagination">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-2"
       >
-        &lt;
+        {'<'}
       </button>
 
-      {pageNumbers.map((number) => (
+      {/* First page */}
+      <button
+        onClick={() => onPageChange(1)}
+        className={currentPage === 1 ? 'active' : ''}
+      >
+        1
+      </button>
+
+      {/* Show dots if there are many pages before current */}
+      {currentPage > 3 && <button disabled>...</button>}
+
+      {/* Pages around current page */}
+      {Array.from({ length: totalPages }, (_, i) => i + 1)
+        .filter(
+          (num) =>
+            num !== 1 && num !== totalPages && Math.abs(currentPage - num) <= 1
+        )
+        .map((num) => (
+          <button
+            key={num}
+            onClick={() => onPageChange(num)}
+            className={currentPage === num ? 'active' : ''}
+          >
+            {num}
+          </button>
+        ))}
+
+      {/* Show dots if there are many pages after current */}
+      {currentPage < totalPages - 2 && <button disabled>...</button>}
+
+      {/* Last page */}
+      {totalPages > 1 && (
         <button
-          key={number}
-          onClick={() => onPageChange(number)}
-          className={`px-2 ${currentPage === number ? 'text-blue-500' : ''}`}
+          onClick={() => onPageChange(totalPages)}
+          className={currentPage === totalPages ? 'active' : ''}
         >
-          {number}
+          {totalPages}
         </button>
-      ))}
+      )}
 
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-2"
       >
-        &gt;
+        {'>'}
       </button>
     </div>
   );

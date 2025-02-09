@@ -1,7 +1,7 @@
 import { useRatesContext } from '../../context/RatesContext';
 import {
   calculateStats,
-  filterRatesByCurrency
+  filterRatesByCurrency,
 } from '../../utils/calculations';
 
 function Footer() {
@@ -11,12 +11,12 @@ function Footer() {
   const stats = calculateStats(filteredRates);
 
   return (
-    <footer className="bg-white p-4 shadow-md mt-4">
-      <p className="text-center text-sm">
+    <footer className="exchange-stats">
+      <p>
         Minimum: {stats.min} {selectedCurrency}, Maximum: {stats.max}{' '}
         {selectedCurrency}
       </p>
-      <p className="text-center text-sm">
+      <p>
         Average: {stats.avg} {selectedCurrency}
       </p>
     </footer>

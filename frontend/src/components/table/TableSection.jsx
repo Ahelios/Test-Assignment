@@ -9,6 +9,7 @@ function TableSection() {
   const { allRates, selectedCurrency, loading, updating, error, requestInfo } =
     useRatesContext();
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortAscending, setSortAscending] = useState(false); // false = newest first (default)
   const itemsPerPage = 10;
 
   // Move all hooks to the top level, before any conditional logic
@@ -26,7 +27,11 @@ function TableSection() {
             rate.base_currency === 'EUR' &&
             rate.target_currency === selectedCurrency
         )
-        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+        .sort((a, b) => {
+          const dateA = new Date(a.updated_at);
+          const dateB = new Date(b.updated_at);
+          return sortAscending ? dateA - dateB : dateB - dateA;
+        })
     : [];
 
   const totalPages = Math.ceil(filteredRates.length / itemsPerPage);
@@ -35,66 +40,71 @@ function TableSection() {
     currentPage * itemsPerPage
   );
 
+  const handleSortToggle = () => {
+    setSortAscending(!sortAscending);
+    setCurrentPage(1); // Reset to first page when sorting changes
+  };
+
   if (loading) {
-    return <div className="p-4">Loading exchange rates...</div>;
+    return <div>Loading exchange rates...</div>;
   }
 
   if (error) {
-    return <div className="p-4 text-red-600">{error}</div>;
+    return <div>{error}</div>;
   }
 
   return (
-    <section className="p-4">
-      <div className="mb-4">
-        <CurrencySelector />
-        {updating && <div className="text-blue-600">Updating rates...</div>}
-        {requestInfo && (
-          <div className="text-sm text-gray-600 mt-2">
-            <p>API Requests Made: {requestInfo.requestCount}</p>
-            <p>Remaining Requests: {requestInfo.remainingRequests}</p>
-          </div>
-        )}
-        {error && <div className="text-red-600 mt-2">{error}</div>}
-      </div>
+    <section>
+      {/* Currency Selector */}
+      <CurrencySelector />
 
+      {/* Top Pagination */}
       {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+        <div className="pagination">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       )}
-      
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border">Date</th>
-              <th className="py-2 px-4 border">EUR to {selectedCurrency}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentRates.map((rate) => (
-              <RateRow
-                key={rate.id}
-                rate={rate}
-                updateNumber={
-                  filteredRates.length -
-                  ((currentPage - 1) * itemsPerPage +
-                    filteredRates.indexOf(rate))
-                }
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
 
+      {/* Table */}
+      <table className="exchange-table">
+        <thead>
+          <tr>
+            <th>
+              Date{' '}
+              <button className="sort-button" onClick={handleSortToggle}>
+                {sortAscending ? '⬇' : '⬆'}
+              </button>
+            </th>
+            <th>EUR to {selectedCurrency}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentRates.map((rate) => (
+            <RateRow
+              key={rate.id}
+              rate={rate}
+              updateNumber={
+                filteredRates.length -
+                ((currentPage - 1) * itemsPerPage + filteredRates.indexOf(rate))
+              }
+            />
+          ))}
+        </tbody>
+      </table>
+
+      {/* Bottom Pagination */}
       {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+        <div className="pagination">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       )}
     </section>
   );

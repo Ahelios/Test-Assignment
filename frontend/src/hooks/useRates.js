@@ -22,7 +22,7 @@ export function useRates() {
       setAllRates(response.data); // Always display existing rates
 
       const latestRate = response.data[0];
-      const timeGap = 900000; // 15 minutes
+      const timeGap = 1800000; // 30 minutes
       const isOld = new Date() - new Date(latestRate.updated_at) > timeGap;
 
       if (isOld) {

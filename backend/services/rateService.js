@@ -12,7 +12,7 @@ const TARGET_CURRENCIES = ['GBP', 'USD', 'AUD'];
 
 let requestCount = 0;
 const MAX_TEST_REQUESTS = 100;
-const REQUEST_TIMEOUT = 900000; // 15 minutes
+const REQUEST_TIMEOUT = 1800000; // 30 minutes
 
 const fetchAndUpdateRates = async () => {
   try {

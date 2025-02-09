@@ -1,3 +1,145 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.app {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header styles */
+header {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+header p {
+  font-size: 14px;
+}
+
+/* Make section match header width */
+section {
+  width: 100%;
+  max-width: 500px; /* Same as header */
+}
+
+/* Currency selector */
+.currency-selector {
+  width: 100%;
+  max-width: 500px; /* Same as header */
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Style the currency selector */
+.currency-selector select {
+  padding: 4px;
+  border: 1px solid #ccc;
+  outline: none; /* Remove the focus outline */
+}
+
+/* Table styles */
+.exchange-table {
+  width: 100%;
+  border-collapse: collapse;
+  /* margin-top: 20px; */
+  /* table-layout: fixed; */
+}
+
+.exchange-table th {
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #f5f5f5;
+}
+
+.exchange-table td {
+  font-size: 13px;
+}
+
+.exchange-table th,
+.exchange-table td {
+  width: 50%;
+  border: 1px solid #0b0a0a;
+  padding: 12px;
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination button {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button:first-child,
+.pagination button:last-child {
+  border: none;
+}
+
+.pagination button:hover {
+  background-color: #f5f5f5;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.exchange-stats {
+  font-size: 14px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Center text in table cells */
+.exchange-table td,
+.exchange-table th {
+  text-align: center;
+}
+/* Center header text */
+header {
+  text-align: center;
+}
+
+/* Sort button styles */
+.sort-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 16px;
+}
+
+.sort-button:hover {
+  opacity: 0.7;
+}

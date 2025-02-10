@@ -87,7 +87,7 @@ Create the database manually by running command:
 
 Run Backend (Node.js Express Server)
 
-`cd backend`
+`cd ../backend`
 
 `npm run dev`
 
@@ -95,7 +95,7 @@ This starts the backend server on `http://localhost:3000`
 
 Run Frontend (React/Vite)
 
-`cd frontend`
+`cd ../frontend`
 
 `npm run dev`
 

@@ -1,11 +1,11 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const cors = require('cors');
 const schedule = require('node-schedule');
 const rateRoutes = require('./routes/rateRoutes');
 const {
   initializeDatabase,
-  getAllRates
+  getAllRates,
 } = require('./models/exchangeRateModel');
 const { fetchAndUpdateRates } = require('./services/rateService');
 
@@ -24,7 +24,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
     error: 'Something broke!',
-    message: err.message
+    message: err.message,
   });
 });
 

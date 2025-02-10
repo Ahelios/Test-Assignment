@@ -75,7 +75,7 @@ Install frontend dependencies
 
 `npm install`
 
-5️⃣ Set Up Database
+### 5️⃣ Set Up Database
 
 Start MySQL Server.
 
@@ -83,7 +83,7 @@ Create the database manually by running command:
 
 `CREATE DATABASE currency_exchange;`
 
-6️⃣ Running the Project
+### 6️⃣ Running the Project
 
 Run Backend (Node.js Express Server)
 
@@ -111,7 +111,7 @@ Check the backend by making a request in Postman or your browser: `GET http://lo
 
 If everything is working, the backend should return exchange rate data in JSON format.
 
-8️⃣ Common Issues & Fixes
+### Common Issues & Fixes
 
 ❓ Frontend is not fetching rates?
 

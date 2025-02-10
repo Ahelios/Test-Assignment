@@ -1,17 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset body */
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   display: flex;
   justify-content: center;
   font-family: Arial, sans-serif;
   font-size: 14px;
+  width: 100%;
 }
 
+/* Add root styling */
+#root {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Update app container */
 .app {
   width: 100%;
-  max-width: 800px;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,13 +34,14 @@ body {
 header {
   width: 100%;
   max-width: 500px;
-  text-align: center;
+  /* text-align: center; */
 }
 
 header h1 {
   font-size: 24px;
   font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
+  width: 100%;
 }
 
 header p {
@@ -37,7 +51,7 @@ header p {
 /* Make section match header width */
 section {
   width: 100%;
-  max-width: 500px; /* Same as header */
+  max-width: 500px;
 }
 
 /* Currency selector */

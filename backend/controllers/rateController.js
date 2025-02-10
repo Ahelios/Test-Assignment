@@ -3,7 +3,6 @@ const {
   getAllRates: getAllRatesFromService,
   getRatesByCurrency: getRatesByCurrencyService,
   getStats: getStatsService,
-  updateRates: updateRatesService,
   fetchAndUpdateRates
 } = require('../services/rateService');
 

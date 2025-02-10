@@ -1,6 +1,6 @@
 import { formatDate } from '../../utils/dateFormatters';
 
-function RateRow({ rate, updateNumber }) {
+function RateRow({ rate }) {
   return (
     <tr>
       <td>{formatDate(rate.updated_at)}</td>

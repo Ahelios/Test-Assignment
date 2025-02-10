@@ -48,7 +48,13 @@ const initializeApp = async () => {
 };
 
 // Schedule rate updates - runs at midnight every day
-schedule.scheduleJob('0 0 * * *', fetchAndUpdateRates);
+schedule.scheduleJob('0 0 * * *', async () => {
+  try {
+    await fetchAndUpdateRates();
+  } catch (error) {
+    console.error('Daily rate update failed:', error);
+  }
+});
 
 // Start server
 app.listen(PORT, async () => {

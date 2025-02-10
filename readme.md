@@ -132,4 +132,6 @@ The cron job only runs every 24 hours (`0 0 * * *`).
 For development/testing purposes, you can modify the cron timing in `server.js` to run every 5 minutes using:
 `*/5 * * * *`
 
+To track precise time during testing process you should uncomment the time related key-value pairs in `dateFormatters.js`
+
 You can also manually trigger it by calling `fetchAndUpdateRates()` in `server.js`.

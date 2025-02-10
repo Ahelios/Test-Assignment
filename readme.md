@@ -128,9 +128,3 @@ Add unit tests for key components.
 Improve the UI with more styling.
 
 Deploy the project on Vercel/Netlify (frontend) and Render/Heroku (backend).
-
-📜 License
-
-This project is licensed under the MIT License.
-
-👨‍💻 Built with ❤️ by [Your Name]

@@ -11,7 +11,7 @@ function TableSection() {
     selectedCurrency,
     loading,
     error,
-    updateRates,
+    updateRates
   } = useRatesContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortAscending, setSortAscending] = useState(false); // false = newest first (default)

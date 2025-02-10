@@ -31,6 +31,7 @@ const getRatesForCurrency = async (targetCurrency) => {
       'SELECT * FROM rates WHERE target_currency = ? ORDER BY updated_at DESC',
       [targetCurrency]
     );
+
     return rows;
   } catch (error) {
     console.error('Error fetching rates:', error);
@@ -59,6 +60,7 @@ const updateRates = async (baseCurrency, targetCurrency, rate) => {
       'INSERT INTO rates (base_currency, target_currency, exchange_rate) VALUES (?, ?, ?)',
       [baseCurrency, targetCurrency, rate]
     );
+
     return result;
   } catch (error) {
     console.error('Error inserting rate:', error);
@@ -81,6 +83,7 @@ const getStatistics = async (targetCurrency) => {
     `,
       [targetCurrency]
     );
+
     return rows[0];
   } catch (error) {
     console.error('Error fetching statistics:', error);
@@ -93,5 +96,5 @@ module.exports = {
   getRatesForCurrency,
   getAllRates,
   updateRates,
-  getStatistics,
+  getStatistics
 };

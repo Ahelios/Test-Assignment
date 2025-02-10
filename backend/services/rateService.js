@@ -3,7 +3,7 @@ const {
   getAllRates,
   updateRates,
   getStatistics,
-  getRatesForCurrency,
+  getRatesForCurrency
 } = require('../models/exchangeRateModel');
 
 const API_KEY = process.env.ANYAPI_KEY;
@@ -55,5 +55,5 @@ module.exports = {
   fetchAndUpdateRates,
   getAllRates,
   getRatesByCurrency,
-  getStats,
+  getStats
 };
